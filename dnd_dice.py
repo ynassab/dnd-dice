@@ -1,7 +1,8 @@
 
-# Version of the simulator with few or no gifs
+# DnD dice simulation with GIFs
+# Yahia Nassab
+# June 2018
 
-# Required imports
 
 from tkinter import Canvas, Frame, Button, Label, Tk, Toplevel, ttk
 from PIL import Image, ImageTk, ImageSequence
