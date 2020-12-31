@@ -1,28 +1,24 @@
-
 # DnD dice simulation with GIFs
 # Yahia Nassab
 # June 2018
 
+# Currently known bugs:
+#	Log text disappears from the window when it grows too large
+#		Adding a scroll bar would be good
 
 from tkinter import Canvas, Frame, Button, Label, Tk, Toplevel, ttk
 from PIL import Image, ImageTk, ImageSequence
 from random import randint
 from copy import copy
 
-
-
 # Set up the dice GUI
-
 diceRoot = Tk()
-
 diceRoot.title("Dungeons & Dragons Dice Simulator with Gifs")
-
 windowWidth = 900
 windowHeight = 600
 diceRoot.geometry("{}x{}".format(windowWidth, windowHeight))
 
 # Create some frames for organization
-
 leftFrame = Frame(diceRoot)
 leftFrame.pack(side = "left", fill = "both")
 
@@ -32,11 +28,9 @@ middleFrame.pack(side = "left", fill = "both")
 rightFrame = Frame(diceRoot)
 rightFrame.pack(side = "right", fill = "both", expand = True)
 
-
 # Unbinds the spacebar from every button (creates a dummy button that doesn't appear on the root)
 no_space_button = ttk.Button(diceRoot)
 no_space_button.unbind_class("TButton", "<Key-space>")
-
 
 # To close the app
 def finished():
@@ -49,28 +43,26 @@ exit_button = ttk.Button(rightFrame, text = "Exit", command = finished)
 exit_button.pack(side = "bottom", anchor = "e")
 
 # Set up canvas for gif
-
 gifCanvas = Canvas(rightFrame)
 gifCanvas.pack(side = "top", anchor = "n", fill = "both", expand = True)
 
-
 class Gif:
 	def __init__(self, filepath, speed = 75):
-        
+		
 		self.filepath = filepath # filepath for gif
 		self.speed = speed # how fast the gif will play
 		self.parent = diceRoot
-        
+		
 		# Create a list of each frame in the gif
 		self.true_image = Image.open(self.filepath)
 		self.old_image_iteration = ImageSequence.Iterator(self.true_image)
-        
+		
 		# Aspect ratio needed for appropriate size adjustment
 		width, height = self.true_image.size
 		self.im_aspect_ratio = height / width
 
 		return
-    
+	
 	def __call__(self, stillImage = None):
 		
 		self.stillImage = stillImage
@@ -129,29 +121,24 @@ class Gif:
 				self.stillImage()
 		
 		return
-
 	
 # Initiates respective gif when called (gifs are initiated in alphabetical order)
-
 batmanFacepalm =			Gif(r'gifs\batman_facepalm.gif')
-drakeDancing = 				Gif(r'gifs\drake_dancing.gif', speed = 100)
+drakeDancing =				Gif(r'gifs\drake_dancing.gif', speed = 100)
 interestingManClap =		Gif(r'gifs\interesting_man_clap.gif')
 kevinHeartBlink =			Gif(r'gifs\kevin_heart_blink.gif', speed = 100)
-ohNoPanda = 				Gif(r'gifs\oh_no_panda.gif')
+ohNoPanda =					Gif(r'gifs\oh_no_panda.gif')
 shaqShimmy =				Gif(r'gifs\shaq_shimmy.gif', speed = 25)
 simonCowellFacepalm =		Gif(r'gifs\simon_cowell_facepalm.gif')
 tonyStarkExplosion =		Gif(r'gifs\tony_stark_explosion.gif')
 vinDieselCritical =			Gif(r'gifs\vin_diesel_critical.gif')
 
-    
 class StillImage:
 	def __init__(self, filepath):
 		
 		self.true_image = Image.open(filepath)
-		
 		width, height = self.true_image.size
 		self.im_aspect_ratio = height / width
-
 		return
 	
 	def __call__(self):
@@ -175,9 +162,7 @@ class StillImage:
 		
 		return
 
-
 # Functionality for each die
-
 class Die:
 	# You can add *args here for special gifs
 	def __init__(self, die_size, name):
@@ -186,7 +171,6 @@ class Die:
 		self.name = name
 		self.running_total = 0
 		self.count = [i+1 for i in range(die_size)] # Create a list from "1" to "size"
-
 		return
 	
 	def __call__(self): 
@@ -233,11 +217,9 @@ class Die:
 				batmanFacepalm()
 			elif chosen_gif == 4:
 				ohNoPanda()
-		
 		return
 
 # Initiate each die
-
 d4 = Die(4, "D4")
 d6 = Die(6, "D6")
 d8 = Die(8, "D8")
@@ -246,21 +228,17 @@ d12 = Die(12, "D12")
 d20 = Die(20, "D20")
 
 # Create GUI buttons for each die
-
 for die in [ ["D4", d4],
 			["D6", d6],
 			["D8", d8],
 			["D10", d10],
 			["D12", d12],
 			["D20", d20]]:
-				button = ttk.Button(leftFrame, text = die[0], command = die[1])
-				button.pack(side = "top", anchor = "w")
-
+	button = ttk.Button(leftFrame, text = die[0], command = die[1])
+	button.pack(side = "top", anchor = "w")
 
 # Bind keyboard letters to each die
-
-# "Helper function" that makes keys bind properly 
-def make_lambda(command):
+def make_lambda(command): # "Helper function" that makes keys bind properly 
 	return lambda event: command()
 
 for pair in [[ "a" , "A", d4 ],
@@ -269,17 +247,18 @@ for pair in [[ "a" , "A", d4 ],
 			[ "f" , "F", d10 ],
 			[ "g" , "G", d12 ],
 			[ "h" , "H", d20 ]]:
-				
-				# Bind lowercase letters
-				diceRoot.bind( pair[0], make_lambda(pair[2]) )
-				# Bind capital letters (in case caps lock is on)
-				diceRoot.bind( pair[1], make_lambda(pair[2]) )
+	
+	# Bind lowercase letters
+	diceRoot.bind( pair[0], make_lambda(pair[2]) )
+	# Bind capital letters (in case caps lock is on)
+	diceRoot.bind( pair[1], make_lambda(pair[2]) )
 
 # Button to reset the log
 def resetLog():
 	logLabel["text"] = "Log:"
 	totalLabel["text"] = "Total:"
 	return
+
 resetLogButton = ttk.Button(leftFrame, text = "Reset Log", command = resetLog)
 resetLogButton.pack(side = "top", anchor = "w")
 
