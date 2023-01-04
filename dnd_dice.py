@@ -1,12 +1,12 @@
 # DnD dice simulation with GIFs
 # Yahia Nassab
-# June 2018
+# June 2018 (mostly)
 
 # Currently known bugs:
 #	Log text disappears from the window when it grows too large
 #		Adding a scroll bar would be good
 
-from tkinter import Canvas, Frame, Button, Label, Tk, Toplevel, ttk
+from tkinter import Canvas, Frame, Button, Label, Tk, ttk
 from PIL import Image, ImageTk, ImageSequence
 from random import randint
 from copy import copy
